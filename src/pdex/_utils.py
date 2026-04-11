@@ -1,5 +1,4 @@
 import logging
-import os
 
 import numba
 import numpy as np
@@ -9,15 +8,10 @@ log = logging.getLogger(__name__)
 
 
 def set_numba_threadpool(threads: int = 0):
-    available_threads = os.cpu_count()
-    if available_threads is None:
-        available_threads = 1
+    available_threads = numba.get_num_threads()
 
-    if threads == 0:
-        if not available_threads:
-            threads = 1
-        else:
-            threads = available_threads
+    if threads <= 0:
+        threads = available_threads
     else:
         threads = min(threads, available_threads)
 
